@@ -3,10 +3,14 @@ function love.load ()
     step  = 0.001
     clock = 0
     paused = false
-    mx, my = 0, 0
+
+    drawing = false
+    currentlifeform = 1
+    lifeforms = {}
+
+    X, Y = 80, 55
 
     Matrix1, Matrix2 = {}, {}
-    X, Y = 80, 55
     mt = {__index = function () return 0 end}
     setmetatable(Matrix1, mt)
     setmetatable(Matrix2, mt)
@@ -54,15 +58,14 @@ function love.load ()
     love.graphics.setBackgroundColor({0, 0, 0})
     love.graphics.setColor({255, 255, 255})
 
+    local f = loadfile("lifeforms.lua")
+    f()
+    loadLifeforms(lifeforms)
 end
 
 function love.update (dt)
     if     love.keyboard.isDown("up")   then speed = speed + step
     elseif love.keyboard.isDown("down") then speed = speed - step end
-
-    mx, my = love.mouse.getPosition()
-    mx = mx or 0
-    my = my or 0
 
     clock = clock + dt
     if clock < speed or paused then return end
@@ -91,17 +94,18 @@ function love.draw ()
         end
     end
 
-    love.graphics.print("clear [c],  random [r],  quit [q],  pause [ ]: " .. tostring(paused), 10, 570)
-    love.graphics.print("speed [up|down]: " .. tostring(speed), 350, 570)
+    love.graphics.print("draw [d],  clear [c],  random [r],  quit [q],  pause [ ]: " .. tostring(paused), 10, 570)
+    if drawing then
+        love.graphics.print("lifeform [left|right]: " .. lifeforms.lf[currentlifeform][1] .. " " .. tostring(currentlifeform) .. "/" .. tostring(lifeforms.count), 400, 570)
+    else
+        love.graphics.print("speed [up|down]: " .. tostring(speed), 400, 570)
+    end
     love.graphics.print("by A. Decimo", 700, 570)
-    -- love.graphics.print("mouse:  " .. tostring(mx) .. ", " .. tostring(my), 180, 550)
-    -- love.graphics.print("neighb: " .. tostring(countNeighboors(math.floor((mx + 9) / 10), math.floor((my + 9) / 10))), 180, 570)
-    -- love.graphics.print("matrix: " .. tostring(readFirst), 350, 550)
 end
 
 function love.keypressed (key)
     if key == ' ' then
-        if paused then paused = false else paused = true end
+        if paused then if drawing then drawing = false end paused = false else paused = true end
     elseif key == 'c' then
         paused = true
         changeMatrix()
@@ -112,6 +116,16 @@ function love.keypressed (key)
         randomize()
         readFirst = (not readFirst)
         paused = false
+    elseif key == 'd' then
+        paused = true
+        if drawing then drawing = false; paused = false return end
+        drawing = true
+    elseif key == 'right' and drawing then
+        currentlifeform = currentlifeform + 1
+        if currentlifeform > #lifeforms.lf then currentlifeform = 1 end
+    elseif key == 'left' and drawing then
+        currentlifeform = currentlifeform - 1
+        if currentlifeform < 1 then currentlifeform = #lifeforms.lf end
     elseif key == 'q' then
         love.event.quit()
     end
@@ -122,10 +136,52 @@ function love.mousepressed (x, y, button)
         x = math.floor((x + 9) / 10)
         y = math.floor((y + 9) / 10)
 
-        if readFirst then
-            if getCell(x, y) == 1 then Matrix1[(x - 1) * Y + y] = 0 else Matrix1[(x - 1) * Y + y] = 1 end
+        if drawing then
+            local dx, dy = x, y
+            local c = ''
+            local life = lifeforms.lf[currentlifeform][2]
+            local operande = 0
+            pause = true
+            readFirst = (not readFirst)
+
+            for i = 1, #life do
+                c = life:sub(i, i)
+                if c:match("%d") then
+                    if operande == 0 then
+                        operande = tonumber(c)
+                    else
+                        operande = operande * 10 + tonumber(c)
+                    end
+                elseif c == lifeforms.char.dead then
+                    if operande == 0 then operande = 1 end
+                    for j = 1, operande do
+                        setCell(dx, dy, 0)
+                        dx = dx + 1
+                    end
+                    operande = 0
+                elseif c == lifeforms.char.alive then
+                    if operande == 0 then operande = 1 end
+                    for j = 1, operande do
+                        setCell(dx, dy, 1)
+                        dx = dx + 1
+                    end
+                    operande = 0
+                elseif c == lifeforms.char.newline then
+                    if operande == 0 then operande = 1 end
+                    dy = dy + operande
+                    operande = 0
+                    dx = x
+                end
+            end
+
+            readFirst = (not readFirst)
+            pause = false
         else
-            if getCell(x, y) == 1 then Matrix2[(x - 1) * Y + y] = 0 else Matrix2[(x - 1) * Y + y] = 1 end
+            if readFirst then
+                if getCell(x, y) == 1 then Matrix1[(x - 1) * Y + y] = 0 else Matrix1[(x - 1) * Y + y] = 1 end
+            else
+                if getCell(x, y) == 1 then Matrix2[(x - 1) * Y + y] = 0 else Matrix2[(x - 1) * Y + y] = 1 end
+            end
         end
     end
 end
