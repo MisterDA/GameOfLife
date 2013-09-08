@@ -1,14 +1,15 @@
 function love.load ()
     speed = 1
-    step  = 0.001
+    step  = 0.005
     clock = 0
+    zoom = 1.5
     paused = false
 
     drawing = false
     currentlifeform = 1
     lifeforms = {}
 
-    X, Y = 80, 55
+    X, Y = 200, 190
 
     Matrix1, Matrix2 = {}, {}
     mt = {__index = function () return 0 end}
@@ -89,18 +90,17 @@ function love.draw ()
     for x = 1, X do
         for y = 1, Y do
             if getCell(x, y) == 1 then
-                love.graphics.rectangle("fill", 10 * x - 9, 10 * y - 9, 8, 8)
+                love.graphics.rectangle("fill", (zoom + 2) * x - (zoom + 1), (zoom + 2) * y - (zoom + 1), zoom, zoom)
             end
         end
     end
 
-    love.graphics.print("draw [d],  clear [c],  random [r],  quit [q],  pause [ ]: " .. tostring(paused), 10, 570)
+    love.graphics.print("draw [d],  clear [c],  random [r],  quit [q],  zoom [-|+],  pause [ ]: " .. tostring(paused), 10, 680)
     if drawing then
-        love.graphics.print("lifeform [left|right]: " .. lifeforms.lf[currentlifeform][1] .. " " .. tostring(currentlifeform) .. "/" .. tostring(lifeforms.count), 400, 570)
+        love.graphics.print("lifeform [left|right]: " .. lifeforms.lf[currentlifeform][1] .. " " .. tostring(currentlifeform) .. "/" .. tostring(lifeforms.count), 480, 680)
     else
-        love.graphics.print("speed [up|down]: " .. tostring(speed), 400, 570)
+        love.graphics.print("speed [up|down]: " .. tostring(speed), 480, 680)
     end
-    love.graphics.print("by A. Decimo", 700, 570)
 end
 
 function love.keypressed (key)
@@ -126,6 +126,11 @@ function love.keypressed (key)
     elseif key == 'left' and drawing then
         currentlifeform = currentlifeform - 1
         if currentlifeform < 1 then currentlifeform = #lifeforms.lf end
+    elseif key == '+' or key == 'kp+' then
+        zoom = zoom + 0.5
+    elseif key == '-' or key == 'kp-' then
+        zoom = zoom - 0.5
+        if zoom <= 1 then zoom = 1 end
     elseif key == 'q' then
         love.event.quit()
     end
@@ -133,8 +138,8 @@ end
 
 function love.mousepressed (x, y, button)
     if button == "l" then
-        x = math.floor((x + 9) / 10)
-        y = math.floor((y + 9) / 10)
+        x = math.floor((x + (zoom + 1)) / (zoom + 2))
+        y = math.floor((y + (zoom + 1)) / (zoom + 2))
 
         if drawing then
             local dx, dy = x, y
