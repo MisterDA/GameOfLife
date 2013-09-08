@@ -62,6 +62,7 @@ function love.load ()
     local f = loadfile("lifeforms.lua")
     f()
     loadLifeforms(lifeforms)
+    lifeforms.count = #lifeforms.lf
 end
 
 function love.update (dt)
@@ -122,10 +123,10 @@ function love.keypressed (key)
         drawing = true
     elseif key == 'right' and drawing then
         currentlifeform = currentlifeform + 1
-        if currentlifeform > #lifeforms.lf then currentlifeform = 1 end
+        if currentlifeform > lifeforms.count then currentlifeform = 1 end
     elseif key == 'left' and drawing then
         currentlifeform = currentlifeform - 1
-        if currentlifeform < 1 then currentlifeform = #lifeforms.lf end
+        if currentlifeform < 1 then currentlifeform = lifeforms.count end
     elseif key == '+' or key == 'kp+' then
         zoom = zoom + 0.5
     elseif key == '-' or key == 'kp-' then
