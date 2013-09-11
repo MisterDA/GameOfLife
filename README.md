@@ -8,7 +8,8 @@ It is written in [Lua](http://www.lua.org), using the amazing [Löve2D](https://
 
 ## Download
 
-Löve and Lua are not required when running on OSX nor Windows, but if you use a *NIX or the standard `.love` file, you must get them from their website or from your distribution's repository.
+Löve and Lua are not required when running on OSX nor Windows, but if you use a UNIX-like or the standard `.love` file, you must get them from their website or from your distribution's repository.
+Notice that you can use `publish.sh` to make your own releases, after having cloned the project. It requires wget, zip and unzip cli tools.
 
 * Every OS and Linux: [GameOfLife.love](https://dl.dropboxusercontent.com/u/30919824/GameOfLife/GameOfLife.love)
 * Macintosh:          [GameOfLife-osx.zip](https://dl.dropboxusercontent.com/u/30919824/GameOfLife/GameOfLife-osx.zip)
@@ -40,7 +41,6 @@ You can write your own lifeforms and then use them in drawing mode. You just hav
 
 Any number written before one of this characters will add _n_ times this character.
 By example, `###` (the blinker) is the same as `3#`.
-
 
 ## Future
 
