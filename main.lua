@@ -59,10 +59,20 @@ function love.load ()
     love.graphics.setBackgroundColor({0, 0, 0})
     love.graphics.setColor({255, 255, 255})
 
-    local f = loadfile("lifeforms.lua")
-    f()
-    loadLifeforms(lifeforms)
-    lifeforms.count = #lifeforms.lf
+    local ok, chunk, result
+    ok, chunk = pcall(love.filesystem.load, "lifeforms.lua")
+    if not ok then
+        print("Error while loading 'lifeforms.lua':\n" .. tostring(chunk))
+    else
+        ok, result = pcall(chunk)
+        if not ok then
+            print("Error while loading 'lifeforms.lua':\n" .. tostring(result))
+        else
+            loadLifeforms(lifeforms)
+            lifeforms.count = #lifeforms.lf
+            lifeforms.loaded = true
+        end
+    end
 end
 
 function love.update (dt)
@@ -117,7 +127,7 @@ function love.keypressed (key)
         randomize()
         readFirst = (not readFirst)
         paused = false
-    elseif key == 'd' then
+    elseif key == 'd' and lifeforms.loaded then
         paused = true
         if drawing then drawing = false; paused = false return end
         drawing = true
