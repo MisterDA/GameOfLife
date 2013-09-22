@@ -106,7 +106,7 @@ function love.draw ()
         end
     end
 
-    love.graphics.print("draw [d],  clear [c],  random [r],  quit [q],  zoom [-|+],  pause [ ]: " .. tostring(paused), 10, 680)
+    love.graphics.print("draw [d],  clear [c],  random [r], zoom [-|+],  pause [ ]: " .. tostring(paused), 10, 680)
     if drawing then
         love.graphics.print("lifeform [left|right]: " .. lifeforms.lf[currentlifeform][1] .. " " .. tostring(currentlifeform) .. "/" .. tostring(lifeforms.count), 480, 680)
     else
@@ -142,7 +142,7 @@ function love.keypressed (key)
     elseif key == '-' or key == 'kp-' then
         zoom = zoom - 0.5
         if zoom <= 1 then zoom = 1 end
-    elseif key == 'q' then
+    elseif key == 'q' or key == 'escape' then
         love.event.quit()
     end
 end

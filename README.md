@@ -25,7 +25,7 @@ Notice that you can use `publish.sh` to make your own releases, after having clo
 * `space` pauses the game,
 * `up` and `down` control the speed,
 * `+` and `-` can be used as zoom (still a bit buggy),
-* `q` quits the game.
+* `q` or `escape` quit the game.
 
 You can use `d` to enter in the _drawing mode_. While in drawing mode, `left` and `right` can be used to select a predefined lifeform.
 Just click anywhere to render the lifeform. To quit the drawing mode, press `space` or `d` again.
