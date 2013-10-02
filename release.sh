@@ -16,11 +16,13 @@ wget https://bitbucket.org/rude/love/downloads/love-0.8.0-macosx-ub.zip
 
 unzip love-0.8.0-win-x86.zip
 cat love-0.8.0-win-x86/love.exe GameOfLife.love > love-0.8.0-win-x86/GameOfLife.exe
+rm love-0.8.0-win-x86/love.exe
 zip -r GameOfLife-win-x86.zip love-0.8.0-win-x86
 rm -rf love-0.8.0-win-x86.zip love-0.8.0-win-x86
 
 unzip love-0.8.0-win-x64.zip
 cat love-0.8.0-win-x64/love.exe GameOfLife.love > love-0.8.0-win-x64/GameOfLife.exe
+rm love-0.8.0-win-x64/love.exe
 zip -r GameOfLife-win-x64.zip love-0.8.0-win-x64
 rm -rf love-0.8.0-win-x64.zip love-0.8.0-win-x64
 
