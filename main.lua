@@ -76,8 +76,10 @@ function love.load ()
 end
 
 function love.update (dt)
-    if     love.keyboard.isDown("up")   then speed = speed + step
-    elseif love.keyboard.isDown("down") then speed = speed - step end
+    if     love.keyboard.isDown('up')   then speed = speed + step
+    elseif love.keyboard.isDown('down') then speed = speed - step 
+    elseif love.keyboard.isDown('kp+') or love.keyboard.isDown('+') then zoom = zoom + 0.5
+    elseif love.keyboard.isDown('kp-') or love.keyboard.isDown('-') then zoom = zoom - 0.5; if zoom < 1.5 then zoom = 1.5 end end
 
     clock = clock + dt
     if clock < speed or paused then return end
@@ -106,11 +108,13 @@ function love.draw ()
         end
     end
 
-    love.graphics.print("draw [d],  clear [c],  random [r], zoom [-|+],  pause [ ]: " .. tostring(paused), 10, 680)
-    if drawing then
-        love.graphics.print("lifeform [left|right]: " .. lifeforms.lf[currentlifeform][1] .. " " .. tostring(currentlifeform) .. "/" .. tostring(lifeforms.count), 480, 680)
-    else
-        love.graphics.print("speed [up|down]: " .. tostring(speed), 480, 680)
+    if zoom == 1.5 then
+        love.graphics.print("draw [d],  clear [c],  random [r], zoom [-|+],  pause [ ]: " .. tostring(paused), 10, 680)
+        if drawing then
+            love.graphics.print("lifeform [left|right]: " .. lifeforms.lf[currentlifeform][1] .. " " .. tostring(currentlifeform) .. "/" .. tostring(lifeforms.count), 480, 680)
+        else
+            love.graphics.print("speed [up|down]: " .. tostring(speed), 480, 680)
+        end
     end
 end
 
@@ -137,18 +141,18 @@ function love.keypressed (key)
     elseif key == 'left' and drawing then
         currentlifeform = currentlifeform - 1
         if currentlifeform < 1 then currentlifeform = lifeforms.count end
-    elseif key == '+' or key == 'kp+' then
-        zoom = zoom + 0.5
-    elseif key == '-' or key == 'kp-' then
-        zoom = zoom - 0.5
-        if zoom <= 1 then zoom = 1 end
     elseif key == 'q' or key == 'escape' then
         love.event.quit()
     end
 end
 
 function love.mousepressed (x, y, button)
-    if button == "l" then
+    if button == "wu" then
+        zoom = zoom + 0.5
+    elseif button == "wd" then
+        zoom = zoom - 0.5
+        if zoom < 1.5 then zoom = 1.5 end
+    elseif button == "l" then
         x = math.floor((x + (zoom + 1)) / (zoom + 2))
         y = math.floor((y + (zoom + 1)) / (zoom + 2))
 
