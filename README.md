@@ -9,7 +9,7 @@ It is written in [Lua](http://www.lua.org), using the amazing [Löve2D](https://
 ## Download
 
 Löve and Lua are not required when running on OSX nor Windows, but if you use a UNIX-like or the standard `.love` file, you must get them from their website or from your distribution's repository.
-Notice that you can use [love-release.com](https://github.org/MisterDA/love-release) to make your own releases, after having cloned the project.
+Notice that you can use [love-release](https://github.com/MisterDA/love-release) to make your own releases, after having cloned the project.
 
 * Every OS and Linux: [GameOfLife.love](https://dl.dropboxusercontent.com/u/30919824/GameOfLife/GameOfLife.love)
 * Macintosh:          [GameOfLife-osx.zip](https://dl.dropboxusercontent.com/u/30919824/GameOfLife/GameOfLife-osx.zip)
